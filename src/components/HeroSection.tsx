@@ -33,12 +33,12 @@ export const HeroSection = ({
 
           {/* Images - Side by side, centered with arrow */}
           <div className="flex items-center justify-center gap-8 w-full max-w-6xl">
-            <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition flex-1 max-w-lg bg-transparent">
-              <img src={emailScreenshot} alt="Email to WSJ reporter" className="w-full h-auto" style={{mixBlendMode: 'darken', backgroundColor: 'transparent'}} />
+            <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition flex-1 max-w-lg">
+              <img src={emailScreenshot} alt="Email to WSJ reporter" className="w-full h-auto" style={{filter: 'brightness(0.95) contrast(1.1)'}} />
             </div>
             <ArrowRight className="text-primary h-8 w-8 flex-shrink-0" />
-            <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition flex-1 max-w-lg bg-transparent">
-              <img src={wsjArticle} alt="WSJ article coverage" className="w-full h-auto" style={{mixBlendMode: 'darken', backgroundColor: 'transparent'}} />
+            <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition flex-1 max-w-lg">
+              <img src={wsjArticle} alt="WSJ article coverage" className="w-full h-auto" style={{filter: 'brightness(0.95) contrast(1.1)'}} />
             </div>
           </div>
 
