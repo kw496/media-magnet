@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Rocket, ArrowRight } from 'lucide-react';
 import emailScreenshot from '@/assets/email-screenshot.png';
 import wsjArticle from '@/assets/wsj-article.png';
+import { removeBackground, loadImageFromSrc } from '@/utils/backgroundRemoval';
 interface HeroSectionProps {
   onSubmit: (website: string) => void;
 }
@@ -11,6 +12,45 @@ export const HeroSection = ({
   onSubmit
 }: HeroSectionProps) => {
   const [website, setWebsite] = useState('');
+  const [emailImageUrl, setEmailImageUrl] = useState<string>(emailScreenshot);
+  const [wsjImageUrl, setWsjImageUrl] = useState<string>(wsjArticle);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  useEffect(() => {
+    const processImages = async () => {
+      setIsProcessing(true);
+      try {
+        // Process email screenshot
+        const emailImg = await loadImageFromSrc(emailScreenshot);
+        const emailBlob = await removeBackground(emailImg);
+        const emailUrl = URL.createObjectURL(emailBlob);
+        setEmailImageUrl(emailUrl);
+
+        // Process WSJ article screenshot
+        const wsjImg = await loadImageFromSrc(wsjArticle);
+        const wsjBlob = await removeBackground(wsjImg);
+        const wsjUrl = URL.createObjectURL(wsjBlob);
+        setWsjImageUrl(wsjUrl);
+      } catch (error) {
+        console.error('Failed to process images:', error);
+        // Keep original images if processing fails
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+
+    processImages();
+
+    return () => {
+      // Cleanup object URLs
+      if (emailImageUrl !== emailScreenshot) {
+        URL.revokeObjectURL(emailImageUrl);
+      }
+      if (wsjImageUrl !== wsjArticle) {
+        URL.revokeObjectURL(wsjImageUrl);
+      }
+    };
+  }, []);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (website.trim()) {
@@ -34,11 +74,19 @@ export const HeroSection = ({
           {/* Images - Side by side, centered with arrow */}
           <div className="flex items-center justify-center gap-8 w-full max-w-6xl">
             <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition flex-1 max-w-lg">
-              <img src={emailScreenshot} alt="Email to WSJ reporter" className="w-full h-auto bg-transparent" style={{mixBlendMode: 'multiply'}} />
+              <img 
+                src={emailImageUrl} 
+                alt="Email to WSJ reporter" 
+                className={`w-full h-auto ${isProcessing ? 'opacity-50' : ''}`}
+              />
             </div>
             <ArrowRight className="text-primary h-8 w-8 flex-shrink-0" />
             <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition flex-1 max-w-lg">
-              <img src={wsjArticle} alt="WSJ article coverage" className="w-full h-auto bg-transparent" style={{mixBlendMode: 'multiply'}} />
+              <img 
+                src={wsjImageUrl} 
+                alt="WSJ article coverage" 
+                className={`w-full h-auto ${isProcessing ? 'opacity-50' : ''}`}
+              />
             </div>
           </div>
 
