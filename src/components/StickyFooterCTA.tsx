@@ -27,7 +27,7 @@ export const StickyFooterCTA = ({
             <form onSubmit={handleSubmit} className="space-y-3">
               <Input 
                 type="url" 
-                placeholder="Enter your startup website" 
+                placeholder="Enter your startup website..." 
                 value={website} 
                 onChange={e => setWebsite(e.target.value)} 
                 className="w-full h-12 text-lg input-glow smooth-transition border-2 focus:border-primary" 
