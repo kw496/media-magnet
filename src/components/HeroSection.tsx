@@ -4,23 +4,20 @@ import { Input } from '@/components/ui/input';
 import { Rocket } from 'lucide-react';
 import emailScreenshot from '@/assets/email-screenshot.jpg';
 import wsjArticle from '@/assets/wsj-article.jpg';
-
 interface HeroSectionProps {
   onSubmit: (website: string) => void;
 }
-
-export const HeroSection = ({ onSubmit }: HeroSectionProps) => {
+export const HeroSection = ({
+  onSubmit
+}: HeroSectionProps) => {
   const [website, setWebsite] = useState('');
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (website.trim()) {
       onSubmit(website.trim());
     }
   };
-
-  return (
-    <section className="hero-gradient py-20 lg:py-32">
+  return <section className="hero-gradient py-20 lg:py-32">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Content */}
@@ -41,26 +38,12 @@ export const HeroSection = ({ onSubmit }: HeroSectionProps) => {
             {/* CTA Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="flex flex-col sm:flex-row gap-4">
-                <Input
-                  type="url"
-                  placeholder="Enter your startup website"
-                  value={website}
-                  onChange={(e) => setWebsite(e.target.value)}
-                  className="flex-1 h-14 text-lg font-bold input-glow smooth-transition border-2 focus:border-primary"
-                  required
-                />
-                <Button 
-                  type="submit" 
-                  variant="hero" 
-                  size="lg"
-                  className="whitespace-nowrap"
-                >
+                <Input type="url" placeholder="Enter your startup website" value={website} onChange={e => setWebsite(e.target.value)} className="flex-1 h-14 text-lg font-bold input-glow smooth-transition border-2 focus:border-primary" required />
+                <Button type="submit" variant="hero" size="lg" className="whitespace-nowrap">
                   Find my journalists <Rocket className="ml-2 h-5 w-5" />
                 </Button>
               </div>
-              <p className="text-sm text-muted-foreground">
-                ✨ Let's make your inbox famous
-              </p>
+              
             </form>
 
             {/* Guarantee */}
@@ -74,23 +57,14 @@ export const HeroSection = ({ onSubmit }: HeroSectionProps) => {
           <div className="space-y-6">
             <div className="grid grid-cols-1 gap-6">
               <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition">
-                <img 
-                  src={emailScreenshot} 
-                  alt="Email to WSJ reporter" 
-                  className="w-full h-auto"
-                />
+                <img src={emailScreenshot} alt="Email to WSJ reporter" className="w-full h-auto" />
               </div>
               <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition">
-                <img 
-                  src={wsjArticle} 
-                  alt="WSJ article coverage" 
-                  className="w-full h-auto"
-                />
+                <img src={wsjArticle} alt="WSJ article coverage" className="w-full h-auto" />
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
