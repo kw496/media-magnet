@@ -36,7 +36,7 @@ export const HeroSection = ({
             <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition flex-1 max-w-lg">
               <img src={emailScreenshot} alt="Email to WSJ reporter" className="w-full h-auto" style={{filter: 'brightness(0.95) contrast(1.1)'}} />
             </div>
-            <ArrowRight className="text-primary h-8 w-8 flex-shrink-0" />
+            <ArrowRight className="text-primary h-8 w-8 flex-shrink-0 animate-pulse" />
             <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition flex-1 max-w-lg">
               <img src={wsjArticle} alt="WSJ article coverage" className="w-full h-auto" style={{filter: 'brightness(0.95) contrast(1.1)'}} />
             </div>
