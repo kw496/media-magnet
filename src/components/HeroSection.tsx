@@ -30,9 +30,7 @@ export const HeroSection = ({
                 <span className="text-primary">Forbes</span> — no PR agency, no upfront cost.
               </h1>
               
-              <p className="text-xl lg:text-2xl text-muted-foreground leading-relaxed">
-                We've helped startups land press without agencies or bloated PR budgets.
-              </p>
+              <p className="text-xl lg:text-2xl text-muted-foreground leading-relaxed">We help founders secure real media coverage. No PR firm required.</p>
             </div>
 
             {/* CTA Form */}
