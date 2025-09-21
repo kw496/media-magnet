@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Rocket, ArrowRight } from 'lucide-react';
-import emailScreenshot from '@/assets/email-screenshot.png';
-import wsjArticle from '@/assets/wsj-article.png';
+import emailScreenshot from '@/assets/newemail-2.png';
+import wsjArticle from '@/assets/newwsj-2.png';
 interface HeroSectionProps {
   onSubmit: (website: string) => void;
 }
