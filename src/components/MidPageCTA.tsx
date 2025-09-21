@@ -40,7 +40,7 @@ export const MidPageCTA = ({ onSubmit }: MidPageCTAProps) => {
             <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
               <Input
                 type="url"
-                placeholder="Enter your startup website"
+                placeholder="Enter your startup website..."
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
                 className="h-14 text-lg input-glow border-2 focus:border-primary"
@@ -49,8 +49,8 @@ export const MidPageCTA = ({ onSubmit }: MidPageCTAProps) => {
               <Button 
                 type="submit" 
                 variant="hero" 
-                size="lg"
-                className="w-full"
+                size="default"
+                className="font-normal"
               >
                 Find my journalists now <Rocket className="ml-2 h-5 w-5" />
               </Button>
