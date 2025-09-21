@@ -44,17 +44,19 @@ export const HeroSection = ({
 
           {/* CTA Form - Centered */}
           <form onSubmit={handleSubmit} className="flex flex-col items-center space-y-6 w-full max-w-md">
-            <Input 
-              type="url" 
-              placeholder="Enter your startup website..." 
-              value={website} 
-              onChange={e => setWebsite(e.target.value)} 
-              className="w-full h-14 text-lg input-glow smooth-transition border-2 focus:border-primary" 
-              required 
-            />
-            <Button type="submit" variant="hero" size="default" className="font-normal">
-              Find my journalists <Rocket className="ml-2 h-5 w-5" />
-            </Button>
+            <div className="relative w-full">
+              <Input 
+                type="url" 
+                placeholder="Enter your startup website..." 
+                value={website} 
+                onChange={e => setWebsite(e.target.value)} 
+                className="w-full h-14 text-lg input-glow smooth-transition border-2 focus:border-primary pr-32" 
+                required 
+              />
+              <Button type="submit" variant="hero" size="default" className="absolute right-2 top-2 h-10 font-normal">
+                Find journalists <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
           </form>
         </div>
       </div>
