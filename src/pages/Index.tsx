@@ -81,6 +81,12 @@ const Index = () => {
       </header>
 
       <HeroSection onSubmit={handleWebsiteSubmit} />
+
+      {submittedWebsite && (
+        <div id="journalist-results">
+          <JournalistList website={submittedWebsite} />
+        </div>
+      )}
     </main>
   );
 };
