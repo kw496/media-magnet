@@ -50,7 +50,7 @@ export const MidPageCTA = ({ onSubmit }: MidPageCTAProps) => {
                 type="submit" 
                 variant="hero" 
                 size="lg"
-                className="w-full"
+                className="font-normal"
               >
                 Find my journalists now <Rocket className="ml-2 h-5 w-5" />
               </Button>
