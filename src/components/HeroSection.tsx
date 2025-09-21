@@ -50,7 +50,7 @@ export const HeroSection = ({
                 placeholder="Enter your startup website..." 
                 value={website} 
                 onChange={e => setWebsite(e.target.value)} 
-                className="w-full h-14 text-lg input-glow smooth-transition border-2 focus:border-primary pr-32 bg-white text-black" 
+                className="w-full h-14 text-lg input-glow smooth-transition border-2 focus:border-primary pr-32 !bg-white !text-black placeholder:!text-gray-500" 
                 required 
               />
               <Button type="submit" variant="hero" size="default" className="absolute right-2 top-2 h-10 font-normal">
