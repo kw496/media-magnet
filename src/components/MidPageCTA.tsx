@@ -43,7 +43,7 @@ export const MidPageCTA = ({ onSubmit }: MidPageCTAProps) => {
                 placeholder="Enter your startup website"
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
-                className="h-14 text-lg font-bold input-glow border-2 focus:border-primary"
+                className="h-14 text-lg input-glow border-2 focus:border-primary"
                 required
               />
               <Button 

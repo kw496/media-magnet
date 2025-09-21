@@ -30,7 +30,7 @@ export const StickyFooterCTA = ({
                 placeholder="Enter your startup website" 
                 value={website} 
                 onChange={e => setWebsite(e.target.value)} 
-                className="w-full h-12 text-lg font-bold input-glow smooth-transition border-2 focus:border-primary" 
+                className="w-full h-12 text-lg input-glow smooth-transition border-2 focus:border-primary" 
                 required 
               />
               <Button type="submit" variant="hero" size="lg" className="w-full">
