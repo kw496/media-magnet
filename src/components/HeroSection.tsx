@@ -24,7 +24,7 @@ export const HeroSection = ({
           <div className="space-y-8">
             <div className="space-y-6">
               <h1 className="text-4xl lg:text-6xl font-black text-foreground leading-tight">
-                I got my startup featured on{' '}
+                I landed{' '}
                 <span className="text-primary">TechCrunch</span>,{' '}
                 <span className="text-primary">WSJ</span>, and{' '}
                 <span className="text-primary">Forbes</span> without spending a dime.
