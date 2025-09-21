@@ -27,7 +27,7 @@ export const HeroSection = ({
                 I landed{' '}
                 <span className="text-primary">TechCrunch</span>,{' '}
                 <span className="text-primary">WSJ</span>, and{' '}
-                <span className="text-primary">Forbes</span> — no PR agency, no upfront cost.
+                <span className="text-primary">Forbes</span> without spending a dime.
               </h1>
               
               <p className="text-xl lg:text-2xl text-muted-foreground leading-relaxed">We help founders secure real media coverage. No PR firm required.</p>
