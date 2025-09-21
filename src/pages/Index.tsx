@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { HeroSection } from '@/components/HeroSection';
 import { JournalistList } from '@/components/JournalistList';
 import { TrustSection } from '@/components/TrustSection';
@@ -6,10 +6,12 @@ import { TestimonialsCarousel } from '@/components/TestimonialsCarousel';
 import { MidPageCTA } from '@/components/MidPageCTA';
 import { StickyFooterCTA } from '@/components/StickyFooterCTA';
 import { useToast } from '@/hooks/use-toast';
+import type { Journalist } from '@/services/journalists';
 
 const Index = () => {
   const [submittedWebsite, setSubmittedWebsite] = useState<string | null>(null);
   const [showStickyFooter, setShowStickyFooter] = useState(false);
+  const [structuredJournalists, setStructuredJournalists] = useState<Journalist[]>([]);
   const { toast } = useToast();
 
   // Show sticky footer when user scrolls past hero
@@ -44,36 +46,86 @@ const Index = () => {
     setShowStickyFooter(false);
   };
 
+  const structuredData = useMemo(() => {
+    const base = {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: 'Startup Publicity Tool',
+      description:
+        'Get press coverage in top outlets like WSJ, Forbes, TechCrunch without PR agencies or upfront costs',
+      provider: {
+        '@type': 'Organization',
+        name: 'Startup Publicity Tool',
+      },
+      serviceType: 'Media Relations',
+      areaServed: 'Worldwide',
+    } as const;
+
+    if (!structuredJournalists.length) {
+      return base;
+    }
+
+    const journalistEntries = structuredJournalists.map((journalist, index) => {
+      const sameAs = [journalist.twitter, journalist.linkedIn, journalist.instagram].filter(
+        (link): link is string => Boolean(link),
+      );
+      const citations = (journalist.sources ?? []).map((source) => ({
+        '@type': 'CreativeWork',
+        name: source.description,
+        url: source.url,
+      }));
+
+      return {
+        '@type': 'Person',
+        position: index + 1,
+        name: journalist.name,
+        worksFor: {
+          '@type': 'Organization',
+          name: journalist.parentMediaOrganization,
+        },
+        email: journalist.email ? `mailto:${journalist.email}` : undefined,
+        sameAs,
+        subjectOf: {
+          '@type': 'CreativeWork',
+          headline: journalist.coverageSummary,
+          url: journalist.coverageLink,
+        },
+        additionalProperty: [
+          {
+            '@type': 'PropertyValue',
+            name: 'Relevance Score',
+            value: journalist.relevanceScore,
+          },
+        ],
+        ...(citations.length ? { citation: citations } : {}),
+      };
+    });
+
+    return {
+      ...base,
+      potentialAction: {
+        '@type': 'FindAction',
+        name: 'Find Journalists',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: '/findJournalists?website={website}',
+          httpMethod: 'GET',
+          contentType: 'application/json',
+        },
+        result: {
+          '@type': 'ItemList',
+          name: 'Recommended Journalists',
+          itemListElement: journalistEntries,
+        },
+      },
+    };
+  }, [structuredJournalists]);
+
   return (
     <main className="min-h-screen bg-background">
       {/* Structured Data for SEO */}
       <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Service",
-          "name": "Startup Publicity Tool",
-          "description": "Get press coverage in top outlets like WSJ, Forbes, TechCrunch without PR agencies or upfront costs",
-          "provider": {
-            "@type": "Organization",
-            "name": "Startup Publicity Tool"
-          },
-          "serviceType": "Media Relations",
-          "areaServed": "Worldwide",
-          "hasOfferCatalog": {
-            "@type": "OfferCatalog",
-            "name": "Press Coverage Services",
-            "itemListElement": [
-              {
-                "@type": "Offer",
-                "itemOffered": {
-                  "@type": "Service",
-                  "name": "Journalist List Generation",
-                  "description": "Get personalized journalist lists for top media outlets"
-                }
-              }
-            ]
-          }
-        })}
+        {JSON.stringify(structuredData)}
       </script>
 
       <header>
@@ -86,7 +138,10 @@ const Index = () => {
 
       {submittedWebsite && (
         <div id="journalist-results">
-          <JournalistList website={submittedWebsite} />
+          <JournalistList
+            website={submittedWebsite}
+            onResults={(results) => setStructuredJournalists(results)}
+          />
         </div>
       )}
 
