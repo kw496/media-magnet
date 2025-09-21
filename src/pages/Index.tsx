@@ -81,38 +81,6 @@ const Index = () => {
       </header>
 
       <HeroSection onSubmit={handleWebsiteSubmit} />
-      
-      <TrustSection />
-
-      {submittedWebsite && (
-        <div id="journalist-results">
-          <JournalistList website={submittedWebsite} />
-        </div>
-      )}
-
-      <TestimonialsCarousel />
-
-      {!submittedWebsite && <MidPageCTA onSubmit={handleWebsiteSubmit} />}
-
-      <StickyFooterCTA 
-        onSubmit={handleWebsiteSubmit}
-        isVisible={showStickyFooter && !submittedWebsite}
-        onClose={handleStickyFooterClose}
-      />
-
-      <footer className="py-12 bg-muted/30 text-center">
-        <div className="container mx-auto px-4">
-          <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 bg-success/10 text-success-foreground px-4 py-2 rounded-full border border-success/20">
-              <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
-              <span className="font-semibold">You don't pay unless you get covered</span>
-            </div>
-            <p className="text-muted-foreground">
-              © 2024 Startup Publicity Tool. Helping founders land press coverage without agencies or upfront costs.
-            </p>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 };
