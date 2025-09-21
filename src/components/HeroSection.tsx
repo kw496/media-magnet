@@ -17,7 +17,7 @@ export const HeroSection = ({
       onSubmit(website.trim());
     }
   };
-  return <section className="hero-gradient py-20 lg:py-32">
+  return <section className="bg-background py-20 lg:py-32">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left Content */}
