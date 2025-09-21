@@ -37,9 +37,9 @@ export const HeroSection = ({
 
             {/* CTA Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Input type="url" placeholder="Enter your startup website" value={website} onChange={e => setWebsite(e.target.value)} className="flex-1 h-14 text-lg font-bold input-glow smooth-transition border-2 focus:border-primary" required />
-                <Button type="submit" variant="hero" size="lg" className="whitespace-nowrap">
+              <div className="flex flex-col gap-4">
+                <Input type="url" placeholder="Enter your startup website" value={website} onChange={e => setWebsite(e.target.value)} className="w-full h-14 text-lg font-bold input-glow smooth-transition border-2 focus:border-primary" required />
+                <Button type="submit" variant="hero" size="lg" className="w-full">
                   Find my journalists <Rocket className="ml-2 h-5 w-5" />
                 </Button>
               </div>
