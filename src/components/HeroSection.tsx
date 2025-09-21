@@ -26,6 +26,7 @@ export const HeroSection = ({
               <h1 className="text-4xl lg:text-6xl font-black text-foreground leading-tight">
                 I landed{' '}
                 <span className="text-primary">TechCrunch</span>,{' '}
+                <br />
                 <span className="text-primary">Wall Street Journal</span>, and{' '}
                 <span className="text-primary">Forbes</span> without spending a dime.
               </h1>
