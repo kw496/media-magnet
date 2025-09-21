@@ -49,7 +49,7 @@ export const MidPageCTA = ({ onSubmit }: MidPageCTAProps) => {
               <Button 
                 type="submit" 
                 variant="hero" 
-                size="lg"
+                size="default"
                 className="font-normal"
               >
                 Find my journalists now <Rocket className="ml-2 h-5 w-5" />

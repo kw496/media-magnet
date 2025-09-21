@@ -33,7 +33,7 @@ export const StickyFooterCTA = ({
                 className="w-full h-12 text-lg input-glow smooth-transition border-2 focus:border-primary" 
                 required 
               />
-              <Button type="submit" variant="hero" size="lg" className="font-normal">
+              <Button type="submit" variant="hero" size="default" className="font-normal">
                 Find my journalists <Rocket className="ml-2 h-5 w-5" />
               </Button>
             </form>
