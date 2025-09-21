@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Rocket } from 'lucide-react';
+import { Rocket, ArrowRight } from 'lucide-react';
 import emailScreenshot from '@/assets/email-screenshot.png';
 import wsjArticle from '@/assets/wsj-article.png';
 interface HeroSectionProps {
@@ -31,13 +31,14 @@ export const HeroSection = ({
             <p className="text-xl lg:text-2xl text-muted-foreground leading-relaxed">We help founders secure real media coverage. No PR firm required.</p>
           </div>
 
-          {/* Images - Side by side, centered */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full max-w-4xl">
-            <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition">
-              <img src={emailScreenshot} alt="Email to WSJ reporter" className="w-full h-auto" />
+          {/* Images - Side by side, centered with arrow */}
+          <div className="flex items-center justify-center gap-8 w-full max-w-6xl">
+            <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition flex-1 max-w-lg">
+              <img src={emailScreenshot} alt="Email to WSJ reporter" className="w-full h-auto bg-transparent" style={{mixBlendMode: 'multiply'}} />
             </div>
-            <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition">
-              <img src={wsjArticle} alt="WSJ article coverage" className="w-full h-auto" />
+            <ArrowRight className="text-primary h-8 w-8 flex-shrink-0" />
+            <div className="card-shadow rounded-2xl overflow-hidden hover-scale smooth-transition flex-1 max-w-lg">
+              <img src={wsjArticle} alt="WSJ article coverage" className="w-full h-auto bg-transparent" style={{mixBlendMode: 'multiply'}} />
             </div>
           </div>
 
