@@ -46,7 +46,7 @@ export const HeroSection = ({ onSubmit }: HeroSectionProps) => {
                   placeholder="Enter your startup website"
                   value={website}
                   onChange={(e) => setWebsite(e.target.value)}
-                  className="flex-1 h-14 text-lg input-glow smooth-transition border-2 focus:border-primary"
+                  className="flex-1 h-14 text-lg font-bold input-glow smooth-transition border-2 focus:border-primary"
                   required
                 />
                 <Button 

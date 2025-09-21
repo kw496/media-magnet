@@ -36,7 +36,7 @@ export const StickyFooterCTA = ({ onSubmit, isVisible, onClose }: StickyFooterCT
               placeholder="Your startup website"
               value={website}
               onChange={(e) => setWebsite(e.target.value)}
-              className="flex-1 input-glow"
+              className="flex-1 text-lg font-bold input-glow"
               required
             />
             <Button type="submit" variant="hero" className="whitespace-nowrap">
