@@ -87,11 +87,6 @@ export async function findJournalists({
     throw new Error('A website is required to find journalists.');
   }
 
-  const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-  if (!apiKey) {
-    throw new Error('OpenAI API key is not configured. Set VITE_OPENAI_API_KEY in your environment.');
-  }
-
   const resolvedCompanyName = companyName?.trim() || inferCompanyNameFromUrl(website);
   const resolvedCompanyDescription =
     companyDescription?.trim() || inferCompanyDescriptionFromUrl(website, resolvedCompanyName);
@@ -102,84 +97,51 @@ export async function findJournalists({
     companyDescription: resolvedCompanyDescription,
   });
 
-  const response = await fetch(OPENAI_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: OPENAI_MODEL,
-      temperature: 0.3,
-      response_format: { type: 'json_object' },
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are a meticulous media researcher who only responds with valid JSON and never includes commentary outside of the JSON object.',
-        },
-        {
-          role: 'user',
-          content: buildPrompt({
-            website,
-            companyName: resolvedCompanyName,
-            companyDescription: resolvedCompanyDescription,
-          }),
-        },
-      ],
-    }),
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('[findJournalists] OpenAI request failed', {
-      status: response.status,
-      statusText: response.statusText,
-      errorText,
-    });
-    throw new Error(`OpenAI request failed: ${response.status} ${response.statusText} - ${errorText}`);
-  }
-
-  const payload = await response.json();
-  const rawContent = payload?.choices?.[0]?.message?.content;
-
-  console.info('[findJournalists] OpenAI response received', {
-    usage: payload?.usage,
-    hasContent: Boolean(rawContent),
-  });
-
-  if (typeof rawContent !== 'string') {
-    console.error('[findJournalists] Unexpected response shape', { payload });
-    throw new Error('Unexpected OpenAI response format.');
-  }
-
-  let parsed: unknown;
   try {
-    parsed = JSON.parse(rawContent);
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const response = await fetch(`${supabaseUrl}/functions/v1/find-journalists`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        website,
+        companyName: resolvedCompanyName,
+        companyDescription: resolvedCompanyDescription,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      console.error('[findJournalists] Backend request failed', {
+        status: response.status,
+        error: errorData,
+      });
+      throw new Error(errorData.error || 'Failed to find journalists');
+    }
+
+    const data = await response.json();
+    const journalists = data.journalists || [];
+
+    console.info('[findJournalists] Response received', {
+      count: journalists.length,
+    });
+
+    const normalized = journalists
+      .map(normalizeJournalist)
+      .filter((journalist): journalist is Journalist => journalist !== null)
+      .slice(0, TARGET_JOURNALIST_COUNT);
+
+    console.info('[findJournalists] Normalized journalists', {
+      count: normalized.length,
+      preview: normalized.slice(0, 3),
+    });
+
+    return { journalists: normalized };
   } catch (error) {
-    console.error('[findJournalists] Failed to parse JSON', { rawContent, error });
-    throw new Error('Failed to parse OpenAI response as JSON.');
+    console.error('[findJournalists] Error:', error);
+    throw error;
   }
-
-  const journalists = Array.isArray((parsed as Record<string, unknown>).journalists)
-    ? ((parsed as { journalists: unknown[] }).journalists as unknown[])
-    : [];
-
-  if (!journalists.length) {
-    console.warn('[findJournalists] No journalists returned', { parsed });
-  }
-
-const normalized = journalists
-    .map(normalizeJournalist)
-    .filter((journalist): journalist is Journalist => journalist !== null)
-    .slice(0, TARGET_JOURNALIST_COUNT);
-
-  console.info('[findJournalists] Normalized journalists', {
-    count: normalized.length,
-    preview: normalized.slice(0, 3),
-  });
-
-  return { journalists: normalized };
 }
 
 const normalizeWebsite = (website: string): URL | null => {
@@ -337,11 +299,6 @@ export async function getEmailBody({
   companyDescription,
   website,
 }: GetEmailBodyRequest): Promise<GetEmailBodyResponse> {
-  const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-  if (!apiKey) {
-    throw new Error('OpenAI API key is not configured. Set VITE_OPENAI_API_KEY in your environment.');
-  }
-
   console.info('[getEmailBody] Request initiated', {
     journalist: journalist.name,
     email: journalist.email,
@@ -349,68 +306,42 @@ export async function getEmailBody({
     website,
   });
 
-  const response = await fetch(OPENAI_ENDPOINT, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: OPENAI_MODEL,
-      temperature: 0.4,
-      response_format: { type: 'json_object' },
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are a concise PR copywriter who only responds with valid JSON matching the requested schema.',
-        },
-        {
-          role: 'user',
-          content: buildOutreachPrompt({ journalist, companyName, companyDescription, website }),
-        },
-      ],
-    }),
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('[getEmailBody] OpenAI request failed', {
-      status: response.status,
-      statusText: response.statusText,
-      errorText,
-    });
-    throw new Error(`OpenAI request failed: ${response.status} ${response.statusText} - ${errorText}`);
-  }
-
-  const payload = await response.json();
-  const rawContent = payload?.choices?.[0]?.message?.content;
-
-  console.info('[getEmailBody] OpenAI response received', {
-    usage: payload?.usage,
-    hasContent: Boolean(rawContent),
-  });
-
-  if (typeof rawContent !== 'string') {
-    console.error('[getEmailBody] Unexpected response shape', { payload });
-    throw new Error('Unexpected OpenAI response format.');
-  }
-
-  let parsed: unknown;
   try {
-    parsed = JSON.parse(rawContent);
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const response = await fetch(`${supabaseUrl}/functions/v1/generate-outreach`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        journalist, 
+        companyName, 
+        companyDescription,
+        website,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      console.error('[getEmailBody] Backend request failed', {
+        status: response.status,
+        error: errorData,
+      });
+      throw new Error(errorData.error || 'Failed to generate outreach messages');
+    }
+
+    const data = await response.json();
+    const outreach = normalizeOutreach(data);
+
+    console.info('[getEmailBody] Outreach messages generated', {
+      journalist: journalist.name,
+    });
+
+    return { outreach };
   } catch (error) {
-    console.error('[getEmailBody] Failed to parse JSON', { rawContent, error });
-    throw new Error('Failed to parse OpenAI response as JSON.');
+    console.error('[getEmailBody] Error:', error);
+    throw error;
   }
-
-  const outreach = normalizeOutreach(parsed);
-
-  console.info('[getEmailBody] Outreach messages generated', {
-    journalist: journalist.name,
-  });
-
-  return { outreach };
 }
 
 const normalizeOutreach = (entry: unknown): OutreachMessages => {
