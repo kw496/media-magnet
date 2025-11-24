@@ -12,6 +12,8 @@ import {
   type Journalist,
   type OutreachMessages,
 } from '@/services/journalists';
+import { EmailCampaignSidebar } from '@/components/EmailCampaignSidebar';
+import { AnimatePresence } from 'framer-motion';
 
 interface JournalistListProps {
   website: string;
@@ -29,6 +31,7 @@ const toProfileUrl = (value: string | null, baseUrl: string) => {
 
 export const JournalistList = ({ website, onResults }: JournalistListProps) => {
   const [expandedJournalists, setExpandedJournalists] = useState<Set<string>>(new Set());
+  const [showSidebar, setShowSidebar] = useState(false);
   const companyName = useMemo(() => inferCompanyNameFromUrl(website), [website]);
   const companyDescription = useMemo(
     () => inferCompanyDescriptionFromUrl(website, companyName),
@@ -67,10 +70,15 @@ export const JournalistList = ({ website, onResults }: JournalistListProps) => {
 
     if (isError || !data?.journalists) {
       callback([]);
+      setShowSidebar(false);
       return;
     }
 
     callback(data.journalists);
+    // Show sidebar when journalists are loaded
+    if (data.journalists.length > 0) {
+      setShowSidebar(true);
+    }
   }, [data?.journalists, isError]);
   const journalistsList = useMemo(() => data?.journalists ?? [], [data?.journalists]);
 
@@ -382,6 +390,17 @@ export const JournalistList = ({ website, onResults }: JournalistListProps) => {
           })}
         </div>
       </div>
+
+      {/* Email Campaign Sidebar */}
+      <AnimatePresence>
+        {showSidebar && (
+          <EmailCampaignSidebar
+            journalists={journalistsList}
+            companyName={companyName}
+            onClose={() => setShowSidebar(false)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 };
